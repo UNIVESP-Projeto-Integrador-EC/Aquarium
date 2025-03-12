@@ -9,12 +9,11 @@ interface InfoCardProps {
   idealRange: string;
   iconClass: string;
   colorClass: string;
-  linkText: string;
-  linkHref: string;
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({
-  title,  value,  idealRange,  iconClass,  colorClass,  linkText,  linkHref,}) => (
+  title, value, idealRange, iconClass, colorClass,
+}) => (
   <div className="bg-white p-6 rounded-lg shadow">
     <div className="flex items-center space-x-4">
       <div className={`${colorClass} text-white p-3 rounded-full`}>
@@ -25,20 +24,33 @@ const InfoCard: React.FC<InfoCardProps> = ({
         <div className="text-gray-600">{title}</div>
       </div>
     </div>
-    <div className="mt-4 flex justify-between items-center text-sm">
-      <a className={`${colorClass} text-500`} href={linkHref}>
-        {linkText}
-      </a>
-      <div className="text-gray-600">Ideal: {idealRange}</div>
+    <div className="mt-4 text-sm text-gray-600">
+      Ideal: {idealRange}
     </div>
   </div>
 );
 
 const Home: React.FC = () => {
   const [luminosity, setLuminosity] = useState(65);
+  const [waterLevel, setWaterLevel] = useState(70);
+  const [co2Level, setCo2Level] = useState(25);
+  const [nutrients, setNutrients] = useState(50);
+  const [temperature, setTemperature] = useState(27); // Adicionando estado para temperatura
 
   const handleLuminosityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLuminosity(Number(e.target.value));
+  };
+
+  const increaseTemperature = () => {
+    setTemperature(prev => Math.min(prev + 1, 30)); // Limite máximo de 30°C
+  };
+
+  const decreaseTemperature = () => {
+    setTemperature(prev => Math.max(prev - 1, 20)); // Limite mínimo de 20°C
+  };
+
+  const refillNutrients = () => {
+    setNutrients(100); // Abastecendo nutrientes para 100%
   };
 
   return (
@@ -65,34 +77,55 @@ const Home: React.FC = () => {
       </header>
 
       <main className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <InfoCard
-            title="Temperatura da água"
-            value="27°C"
-            idealRange="25°C - 28°C"
-            iconClass="fas fa-thermometer-half"
-            colorClass="bg-blue-400"
-            linkText="Detalhes"
-            linkHref="#"
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <InfoCard
+              title="Temperatura da água"
+              value={`${temperature}°C`}
+              idealRange="25°C - 28°C"
+              iconClass="fas fa-thermometer-half"
+              colorClass="bg-blue-400"
+            />
+            <div className="mt-4">
+              <div className="text-sm text-gray-600">Regular temperatura:</div>
+              <div className="flex justify-center items-center space-x-2 mt-1">
+                <button
+                  onClick={decreaseTemperature}
+                  className="bg-red-500 text-white py-1 px-4 rounded w-24" // Definindo largura fixa
+                >
+                  Diminuir
+                </button>
+                <button
+                  onClick={increaseTemperature}
+                  className="bg-green-500 text-white py-1 px-4 rounded w-24" // Definindo largura fixa
+                >
+                  Aumentar
+                </button>
+              </div>
+            </div>
+          </div>
           <InfoCard
             title="pH da água"
             value="7.5"
             idealRange="6.5 - 8.0"
             iconClass="fas fa-vial"
             colorClass="bg-green-400"
-            linkText="Detalhes"
-            linkHref="#"
           />
-          <InfoCard
-            title="Alimento em estoque"
-            value="85%"
-            idealRange="Acima de 50%"
-            iconClass="fas fa-utensils"
-            colorClass="bg-yellow-400"
-            linkText="Reabastecer"
-            linkHref="#"
-          />
+          <div className="bg-white p-6 rounded-lg shadow">
+            <InfoCard
+              title="Alimento em estoque"
+              value={`${nutrients}%`}
+              idealRange="Acima de 50%"
+              iconClass="fas fa-utensils"
+              colorClass="bg-yellow-400"
+            />
+            <button
+              onClick={refillNutrients}
+              className="mt-4 bg-green-500 text-white py-2 px-4 rounded"
+            >
+              Abastecer recipiente
+            </button>
+          </div>
           <div className="bg-white p-6 rounded-lg shadow">
             <div className="flex items-center space-x-4">
               <div className="bg-purple-400 text-white p-3 rounded-full">
@@ -103,23 +136,46 @@ const Home: React.FC = () => {
                 <div className="text-gray-600">Luminosidade</div>
               </div>
             </div>
-            <div className="mt-4 flex justify-between items-center text-sm">
-              <a className="text-purple-500" href="#">Ajustar</a>
-              <div className="text-gray-600">Ideal: 60% - 70%</div>
+            <div className="mt-4 text-sm text-gray-600">
+              Ideal: 60% - 70%
             </div>
-            <div className="mt-4">
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={luminosity}
-                onChange={handleLuminosityChange}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-              />
-            </div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={luminosity}
+              onChange={handleLuminosityChange}
+              className="w-full mt-4"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+          <div className="grid lg:col-span-2 gap-6">
+            <InfoCard
+              title="Nível de água"
+              value={`${waterLevel}%`}
+              idealRange="70% - 90%"
+              iconClass="fas fa-tint"
+              colorClass="bg-blue-500"
+            />
+            <InfoCard
+              title="Nível de CO₂"
+              value={`${co2Level} mg/L`}
+              idealRange="20 - 30 mg/L"
+              iconClass="fas fa-cloud"
+              colorClass="bg-gray-400"
+            />
+            <InfoCard
+              title="Níveis de nutrientes (NPK)"
+              value={`${nutrients}%`}
+              idealRange="40% - 60%"
+              iconClass="fas fa-leaf"
+              colorClass="bg-green-500"
+            />
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow col-span-1 md:col-span-2 lg:col-span-1">
+          <div className="bg-white p-6 rounded-lg shadow col-span-1 lg:col-span-2">
             <div className="flex justify-between items-center">
               <div className="text-lg font-bold">Todos os peixes</div>
               <i className="fas fa-ellipsis-h text-black"></i>
