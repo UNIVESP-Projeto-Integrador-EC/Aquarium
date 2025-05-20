@@ -9,6 +9,7 @@ interface InfoCardProps {
   idealRange: string;
   iconClass: string;
   colorClass: string;
+  
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({
@@ -35,22 +36,22 @@ const Home: React.FC = () => {
   const [waterLevel, setWaterLevel] = useState(70);
   const [co2Level, setCo2Level] = useState(25);
   const [nutrients, setNutrients] = useState(50);
-  const [temperature, setTemperature] = useState(27); // Adicionando estado para temperatura
+  const [temperature, setTemperature] = useState(27);
 
   const handleLuminosityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLuminosity(Number(e.target.value));
   };
 
   const increaseTemperature = () => {
-    setTemperature(prev => Math.min(prev + 1, 30)); // Limite máximo de 30°C
+    setTemperature(prev => Math.min(prev + 1, 30));
   };
 
   const decreaseTemperature = () => {
-    setTemperature(prev => Math.max(prev - 1, 20)); // Limite mínimo de 20°C
+    setTemperature(prev => Math.max(prev - 1, 20)); 
   };
 
   const refillNutrients = () => {
-    setNutrients(100); // Abastecendo nutrientes para 100%
+    setNutrients(100); 
   };
 
   return (
@@ -91,13 +92,13 @@ const Home: React.FC = () => {
               <div className="flex justify-center items-center space-x-2 mt-1">
                 <button
                   onClick={decreaseTemperature}
-                  className="bg-red-500 text-white py-1 px-4 rounded w-24" // Definindo largura fixa
+                  className="bg-red-500 text-white py-1 px-4 rounded w-24" 
                 >
                   Diminuir
                 </button>
                 <button
                   onClick={increaseTemperature}
-                  className="bg-green-500 text-white py-1 px-4 rounded w-24" // Definindo largura fixa
+                  className="bg-green-500 text-white py-1 px-4 rounded w-24" 
                 >
                   Aumentar
                 </button>
